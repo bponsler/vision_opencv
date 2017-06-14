@@ -1,3 +1,4 @@
+<?xml version='1.0' encoding='utf-8'?>
 <package format="2">
   <name>image_geometry</name>
   <version>1.12.4</version>
@@ -14,16 +15,24 @@
 
   <export>
     <rosdoc config="rosdoc.yaml" />
+    <build_type>ament_cmake</build_type>
   </export>
 
-  <buildtool_depend version_gte="0.5.68">catkin</buildtool_depend>
+  <buildtool_depend>ament</buildtool_depend>
+  <buildtool_depend>ament_cmake_python</buildtool_depend>
 
   <build_depend>opencv3</build_depend>
+  <build_depend>ros2_time</build_depend>
   <build_depend>sensor_msgs</build_depend>
+  <build_depend>sensor_msgs_util</build_depend>
 
   <exec_depend>opencv3</exec_depend>
+  <exec_depend>ros2_time</exec_depend>
+  <exec_depend>sensor_msgs_util</exec_depend>
   <build_export_depend>sensor_msgs</build_export_depend>
 
   <doc_depend>dvipng</doc_depend>
   <doc_depend>texlive-latex-extra</doc_depend>
+
+  <buildtool_depend>ament</buildtool_depend>
 </package>

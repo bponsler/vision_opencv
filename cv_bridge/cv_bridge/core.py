@@ -106,7 +106,7 @@ class CvBridge(object):
         :param desired_encoding:  The encoding of the image data, one of the following strings:
 
            * ``"passthrough"``
-           * one of the standard strings in sensor_msgs/image_encodings.h
+           * one of the standard strings in sensor_msgs_util/image_encodings.h
 
         :rtype: :cpp:type:`cv::Mat`
         :raises CvBridgeError: when conversion is not possible.
@@ -146,7 +146,7 @@ class CvBridge(object):
         :param desired_encoding:  The encoding of the image data, one of the following strings:
 
            * ``"passthrough"``
-           * one of the standard strings in sensor_msgs/image_encodings.h
+           * one of the standard strings in sensor_msgs_util/image_encodings.h
 
         :rtype: :cpp:type:`cv::Mat`
         :raises CvBridgeError: when conversion is not possible.
@@ -230,7 +230,7 @@ class CvBridge(object):
         :param encoding:  The encoding of the image data, one of the following strings:
 
            * ``"passthrough"``
-           * one of the standard strings in sensor_msgs/image_encodings.h
+           * one of the standard strings in sensor_msgs_util/image_encodings.h
 
         :rtype:           A sensor_msgs.msg.Image message
         :raises CvBridgeError: when the ``cvim`` has a type that is incompatible with ``encoding``

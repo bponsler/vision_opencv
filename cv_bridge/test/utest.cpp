@@ -10,10 +10,10 @@ TEST(CvBridgeTest, NonContinuous)
   cv::Mat partial = full.colRange(2, 5);
   
   cv_bridge::CvImage cvi;
-  cvi.encoding = sensor_msgs::image_encodings::MONO16;
+  cvi.encoding = sensor_msgs_util::image_encodings::MONO16;
   cvi.image = partial;
 
-  sensor_msgs::ImagePtr msg = cvi.toImageMsg();
+  sensor_msgs::msg::Image::SharedPtr msg = cvi.toImageMsg();
   EXPECT_EQ(msg->height, 8);
   EXPECT_EQ(msg->width, 3);
   EXPECT_EQ(msg->encoding, cvi.encoding);
@@ -24,16 +24,16 @@ TEST(CvBridgeTest, ChannelOrder)
 {
   cv::Mat_<uint16_t> mat(200, 200);
   mat.setTo(cv::Scalar(1000,0,0,0));
-  sensor_msgs::ImagePtr image(new sensor_msgs::Image());
+  sensor_msgs::msg::Image::SharedPtr image(new sensor_msgs::msg::Image());
 
-  image = cv_bridge::CvImage(image->header, sensor_msgs::image_encodings::MONO16, mat).toImageMsg();
+  image = cv_bridge::CvImage(image->header, sensor_msgs_util::image_encodings::MONO16, mat).toImageMsg();
 
   cv_bridge::CvImageConstPtr cv_ptr = cv_bridge::toCvShare(image);
 
-  cv_bridge::CvImagePtr res = cv_bridge::cvtColor(cv_ptr, sensor_msgs::image_encodings::BGR8);
-  EXPECT_EQ(res->encoding, sensor_msgs::image_encodings::BGR8);
+  cv_bridge::CvImagePtr res = cv_bridge::cvtColor(cv_ptr, sensor_msgs_util::image_encodings::BGR8);
+  EXPECT_EQ(res->encoding, sensor_msgs_util::image_encodings::BGR8);
   EXPECT_EQ(res->image.type(), cv_bridge::getCvType(res->encoding));
-  EXPECT_EQ(res->image.channels(), sensor_msgs::image_encodings::numChannels(res->encoding));
+  EXPECT_EQ(res->image.channels(), sensor_msgs_util::image_encodings::numChannels(res->encoding));
   EXPECT_EQ(res->image.depth(), CV_8U);
 
   // The matrix should be the following
@@ -46,7 +46,7 @@ TEST(CvBridgeTest, ChannelOrder)
 
 TEST(CvBridgeTest, initialization)
 {
-  sensor_msgs::Image image;
+  sensor_msgs::msg::Image image;
   cv_bridge::CvImagePtr cv_ptr;
 
   image.encoding = "bgr8";
@@ -63,7 +63,7 @@ TEST(CvBridgeTest, initialization)
 
   // Check some normal images with different ratios
   for(int height = 100; height <= 300; ++height) {
-    image.encoding = sensor_msgs::image_encodings::RGB8;
+    image.encoding = sensor_msgs_util::image_encodings::RGB8;
     image.step = image.width*3;
     image.data.resize(image.height*image.step);
     cv_ptr = cv_bridge::toCvCopy(image, "mono8");
@@ -73,7 +73,7 @@ TEST(CvBridgeTest, initialization)
 TEST(CvBridgeTest, imageMessageStep)
 {
   // Test 1: image step is padded
-  sensor_msgs::Image image;
+  sensor_msgs::msg::Image image;
   cv_bridge::CvImagePtr cv_ptr;
 
   image.encoding = "mono8";
@@ -107,7 +107,7 @@ TEST(CvBridgeTest, imageMessageStep)
 
 TEST(CvBridgeTest, imageMessageConversion)
 {
-  sensor_msgs::Image imgmsg;
+  sensor_msgs::msg::Image imgmsg;
   cv_bridge::CvImagePtr cv_ptr;
   imgmsg.height = 220;
   imgmsg.width = 200;

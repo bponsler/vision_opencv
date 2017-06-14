@@ -1,10 +1,9 @@
 # add library
 include_directories(./)
 add_library(${PROJECT_NAME} cv_bridge.cpp rgb_colors.cpp)
-add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBRARIES} ${catkin_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${LIBS})
 
-install(TARGETS ${PROJECT_NAME} DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
+install(TARGETS ${PROJECT_NAME} DESTINATION lib)
 
 if(NOT ANDROID)
 # add a Boost Python library
@@ -38,19 +37,19 @@ else()
 add_library(${PROJECT_NAME}_boost module.cpp module_opencv2.cpp)
 endif()
 target_link_libraries(${PROJECT_NAME}_boost ${Boost_LIBRARIES}
-                                            ${catkin_LIBRARIES}
+                                            ${LIBS}
                                             ${PYTHON_LIBRARIES}
                                             ${PROJECT_NAME}
 )
 
 set_target_properties(${PROJECT_NAME}_boost PROPERTIES
-                      LIBRARY_OUTPUT_DIRECTORY ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_PYTHON_DESTINATION}/${PROJECT_NAME}/boost/
-                      PREFIX ""
+  LIBRARY_OUTPUT_DIRECTORY ${CMAKE_INSTALL_PREFIX}/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/${PROJECT_NAME}/boost/
+  PREFIX ""
 )
 if(APPLE)
   set_target_properties(${PROJECT_NAME}_boost PROPERTIES
                         SUFFIX ".so")
 endif()
 
-install(TARGETS ${PROJECT_NAME}_boost DESTINATION ${CATKIN_PACKAGE_PYTHON_DESTINATION}/boost/)
+install(TARGETS ${PROJECT_NAME}_boost DESTINATION lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/boost/)
 endif()

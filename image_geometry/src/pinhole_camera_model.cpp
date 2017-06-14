@@ -1,7 +1,7 @@
 #include <memory>
 
 #include "image_geometry/pinhole_camera_model.h"
-#include <sensor_msgs/distortion_models.h>
+#include <sensor_msgs_util/distortion_models.h>
 
 namespace image_geometry {
 
@@ -80,7 +80,7 @@ bool updateMat(const MatT& new_mat, MatT& my_mat, MatU& cv_mat)
   return true;
 }
 
-bool PinholeCameraModel::fromCameraInfo(const sensor_msgs::CameraInfo& msg)
+bool PinholeCameraModel::fromCameraInfo(const sensor_msgs::msg::CameraInfo& msg)
 {
   // Create our repository of cached data (rectification maps, etc.)
   if (!cache_)
@@ -91,7 +91,7 @@ bool PinholeCameraModel::fromCameraInfo(const sensor_msgs::CameraInfo& msg)
   uint32_t binning_y = msg.binning_y ? msg.binning_y : 1;
 
   // ROI all zeros is considered the same as full resolution.
-  sensor_msgs::RegionOfInterest roi = msg.roi;
+  sensor_msgs::msg::RegionOfInterest roi = msg.roi;
   if (roi.x_offset == 0 && roi.y_offset == 0 && roi.width == 0 && roi.height == 0) {
     roi.width  = msg.width;
     roi.height = msg.height;
@@ -106,10 +106,10 @@ bool PinholeCameraModel::fromCameraInfo(const sensor_msgs::CameraInfo& msg)
   full_dirty |= update(msg.height, cam_info_.height);
   full_dirty |= update(msg.width,  cam_info_.width);
   full_dirty |= update(msg.distortion_model, cam_info_.distortion_model);
-  full_dirty |= updateMat(msg.D, cam_info_.D, D_, 1, msg.D.size());
-  full_dirty |= updateMat(msg.K, cam_info_.K, K_full_);
-  full_dirty |= updateMat(msg.R, cam_info_.R, R_);
-  full_dirty |= updateMat(msg.P, cam_info_.P, P_full_);
+  full_dirty |= updateMat(msg.d, cam_info_.d, D_, 1, msg.d.size());
+  full_dirty |= updateMat(msg.k, cam_info_.k, K_full_);
+  full_dirty |= updateMat(msg.r, cam_info_.r, R_);
+  full_dirty |= updateMat(msg.p, cam_info_.p, P_full_);
   full_dirty |= update(binning_x, cam_info_.binning_x);
   full_dirty |= update(binning_y, cam_info_.binning_y);
 
@@ -126,13 +126,13 @@ bool PinholeCameraModel::fromCameraInfo(const sensor_msgs::CameraInfo& msg)
   cache_->rectified_roi_dirty = reduced_dirty;
 
   // Figure out how to handle the distortion
-  if (cam_info_.distortion_model == sensor_msgs::distortion_models::PLUMB_BOB ||
-      cam_info_.distortion_model == sensor_msgs::distortion_models::RATIONAL_POLYNOMIAL) {
+  if (cam_info_.distortion_model == sensor_msgs_util::distortion_models::PLUMB_BOB ||
+      cam_info_.distortion_model == sensor_msgs_util::distortion_models::RATIONAL_POLYNOMIAL) {
     // If any distortion coefficient is non-zero, then need to apply the distortion
     cache_->distortion_state = NONE;
-    for (size_t i = 0; i < cam_info_.D.size(); ++i)
+    for (size_t i = 0; i < cam_info_.d.size(); ++i)
     {
-      if (cam_info_.D[i] != 0)
+      if (cam_info_.d[i] != 0)
       {
         cache_->distortion_state = CALIBRATED;
         break;
@@ -186,7 +186,7 @@ bool PinholeCameraModel::fromCameraInfo(const sensor_msgs::CameraInfo& msg)
   return reduced_dirty;
 }
 
-bool PinholeCameraModel::fromCameraInfo(const sensor_msgs::CameraInfoConstPtr& msg)
+bool PinholeCameraModel::fromCameraInfo(const sensor_msgs::msg::CameraInfo::SharedPtr msg)
 {
   return fromCameraInfo(*msg);
 }

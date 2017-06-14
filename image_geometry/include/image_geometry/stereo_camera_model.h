@@ -7,7 +7,7 @@ namespace image_geometry {
 
 /**
  * \brief Simplifies interpreting stereo image pairs geometrically using the
- * parameters from the left and right sensor_msgs/CameraInfo.
+ * parameters from the left and right sensor_msgs/msg/CameraInfo.
  */
 class StereoCameraModel
 {
@@ -19,16 +19,16 @@ public:
   StereoCameraModel& operator=(const StereoCameraModel& other);
 
   /**
-   * \brief Set the camera parameters from the sensor_msgs/CameraInfo messages.
+   * \brief Set the camera parameters from the sensor_msgs/msg/CameraInfo messages.
    */
-  bool fromCameraInfo(const sensor_msgs::CameraInfo& left,
-                      const sensor_msgs::CameraInfo& right);
+  bool fromCameraInfo(const sensor_msgs::msg::CameraInfo& left,
+                      const sensor_msgs::msg::CameraInfo& right);
 
   /**
-   * \brief Set the camera parameters from the sensor_msgs/CameraInfo messages.
+   * \brief Set the camera parameters from the sensor_msgs/msg/CameraInfo messages.
    */
-  bool fromCameraInfo(const sensor_msgs::CameraInfoConstPtr& left,
-                      const sensor_msgs::CameraInfoConstPtr& right);
+  bool fromCameraInfo(const sensor_msgs::msg::CameraInfo::SharedPtr left,
+                      const sensor_msgs::msg::CameraInfo::SharedPtr right);
 
   /**
    * \brief Get the left monocular camera model.

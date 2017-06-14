@@ -42,7 +42,7 @@
 #include <sensor_msgs/Image.h>
 #include <sensor_msgs/image_encodings.h>
 
-using namespace sensor_msgs::image_encodings;
+using namespace sensor_msgs_util::image_encodings;
 
 bool isUnsigned(const std::string & encoding) {
   return encoding == RGB8 || encoding == RGBA8 || encoding == RGB16 || encoding == RGBA16 || encoding == BGR8 || encoding == BGRA8 || encoding == BGR16 || encoding == BGRA16 || encoding == MONO8 || encoding == MONO16 ||
@@ -73,20 +73,20 @@ TEST(OpencvTests, testCase_encode_decode)
   std::vector<std::string> encodings = getEncodings();
   for(size_t i=0; i<encodings.size(); ++i) {
     std::string src_encoding = encodings[i];
-    bool is_src_color_format = isColor(src_encoding) || isMono(src_encoding) || (src_encoding == sensor_msgs::image_encodings::YUV422);
+    bool is_src_color_format = isColor(src_encoding) || isMono(src_encoding) || (src_encoding == sensor_msgs_util::image_encodings::YUV422);
     cv::Mat image_original(cv::Size(400, 400), cv_bridge::getCvType(src_encoding));
     cv::RNG r(77);
     r.fill(image_original, cv::RNG::UNIFORM, 0, 127);
 
-    sensor_msgs::Image image_message;
+    sensor_msgs::msg::Image image_message;
     cv_bridge::CvImage image_bridge(std_msgs::Header(), src_encoding, image_original);
 
-    // Convert to a sensor_msgs::Image
-    sensor_msgs::ImagePtr image_msg = image_bridge.toImageMsg();
+    // Convert to a sensor_msgs::msg::Image
+    sensor_msgs::msg::Image::SharedPtr image_msg = image_bridge.toImageMsg();
 
     for(size_t j=0; j<encodings.size(); ++j) {
       std::string dst_encoding = encodings[j];
-      bool is_dst_color_format = isColor(dst_encoding) || isMono(dst_encoding) || (dst_encoding == sensor_msgs::image_encodings::YUV422);
+      bool is_dst_color_format = isColor(dst_encoding) || isMono(dst_encoding) || (dst_encoding == sensor_msgs_util::image_encodings::YUV422);
       bool is_num_channels_the_same = (numChannels(src_encoding) == numChannels(dst_encoding));
 
       cv_bridge::CvImageConstPtr cv_image;

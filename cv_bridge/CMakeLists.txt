@@ -1,42 +1,59 @@
 cmake_minimum_required(VERSION 2.8)
 project(cv_bridge)
 
-find_package(catkin REQUIRED COMPONENTS rosconsole sensor_msgs)
+# Add support for C++11
+if(NOT WIN32)
+  add_definitions(-std=c++11)
+endif()
+
+find_package(ament_cmake REQUIRED)
+find_package(ament_cmake_python REQUIRED)
+find_package(ros2_console REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(sensor_msgs_util REQUIRED)
+
+ament_python_install_package(${PROJECT_NAME})
+
+set(INCLUDE_DIRS include ${ament_cmake_INCLUDE_DIRS} ${ros2_console_INCLUDE_DIRS}
+  ${sensor_msgs_INCLUDE_DIRS} ${sensor_msgs_util_INCLUDE_DIRS})
+include_directories(${INCLUDE_DIRS})
+
+set(LIBRARY_DIRS ${ament_cmake_LIBRARY_DIRS} ${ros2_console_LIBRARY_DIRS}
+  ${sensor_msgs_LIBRARY_DIRS} ${sensor_msgs_util_LIBRARY_DIRS})
+
+link_directories(${LIBRARY_DIRS})
+
+set(LIBS ${ament_cmake_LIBRARIES} ${ros2_console_LIBRARIES}
+  ${sensor_msgs_LIBRARIES} ${sensor_msgs_util_LIBRARIES})
 
 if(NOT ANDROID)
   find_package(PythonLibs)
   if(PYTHONLIBS_VERSION_STRING VERSION_LESS 3)
     find_package(Boost REQUIRED python)
   else()
-    find_package(Boost REQUIRED python3)
+    find_package(Boost REQUIRED python-py35)
   endif()
 else()
-find_package(Boost REQUIRED)
+  find_package(Boost REQUIRED)
 endif()
 find_package(OpenCV REQUIRED)
 
-catkin_package(
-  INCLUDE_DIRS include
-  LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS rosconsole sensor_msgs
-  DEPENDS OpenCV
-  CFG_EXTRAS cv_bridge-extras.cmake
-)
-
-catkin_python_setup()
-
-include_directories(include ${Boost_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS} ${catkin_INCLUDE_DIRS})
-
 if(NOT ANDROID)
-add_subdirectory(python)
+  add_subdirectory(python)
 endif()
 add_subdirectory(src)
-if(CATKIN_ENABLE_TESTING)
+if(BUILD_TESTING)
   add_subdirectory(test)
 endif()
 
 # install the include folder
-install(
-  DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-)
+install(DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION include/${PROJECT_NAME})
+
+ament_export_dependencies(ament_cmake)
+ament_export_dependencies(ros2_console)
+ament_export_dependencies(sensor_msgs)
+ament_export_dependencies(sensor_msgs_util)
+ament_export_include_directories(${INCLUDE_DIRS})
+
+ament_package()

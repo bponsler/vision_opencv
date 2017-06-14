@@ -1,8 +1,9 @@
 configure_file(__init__.py.plain.in
-               ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_PYTHON_DESTINATION}/boost/__init__.py
-               @ONLY
+  ${CMAKE_INSTALL_PREFIX}/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/boost/__init__.py
+  @ONLY
 )
 
-install(FILES ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_PYTHON_DESTINATION}/boost/__init__.py
-        DESTINATION ${CATKIN_PACKAGE_PYTHON_DESTINATION}/boost/
+install(
+  FILES ${CMAKE_INSTALL_PREFIX}/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/boost/__init__.py
+  DESTINATION lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}}/boost/
 )
