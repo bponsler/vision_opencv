@@ -18,7 +18,7 @@
     <build_type>ament_cmake</build_type>
   </export>
 
-  <buildtool_depend>ament</buildtool_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
   <buildtool_depend>ament_cmake_python</buildtool_depend>
 
   <build_depend>opencv3</build_depend>
@@ -34,5 +34,5 @@
   <doc_depend>dvipng</doc_depend>
   <doc_depend>texlive-latex-extra</doc_depend>
 
-  <buildtool_depend>ament</buildtool_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
 </package>
